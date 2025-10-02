@@ -8,47 +8,50 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 15% 8%;
-    --foreground: 180 100% 95%;
+    --background: 222 47% 5%;
+    --foreground: 180 100% 98%;
 
-    --card: 220 15% 10%;
-    --card-foreground: 180 100% 95%;
+    --card: 222 40% 8%;
+    --card-foreground: 180 100% 98%;
 
-    --popover: 220 15% 10%;
-    --popover-foreground: 180 100% 95%;
+    --popover: 222 40% 8%;
+    --popover-foreground: 180 100% 98%;
 
-    --primary: 180 100% 50%;
-    --primary-foreground: 220 15% 8%;
-    --primary-glow: 180 100% 70%;
+    --primary: 180 100% 55%;
+    --primary-foreground: 222 47% 5%;
+    --primary-glow: 180 100% 75%;
 
-    --secondary: 200 80% 40%;
-    --secondary-foreground: 180 100% 95%;
+    --secondary: 265 85% 65%;
+    --secondary-foreground: 180 100% 98%;
 
-    --muted: 220 15% 15%;
-    --muted-foreground: 180 50% 60%;
+    --muted: 222 30% 15%;
+    --muted-foreground: 180 30% 70%;
 
-    --accent: 280 60% 50%;
-    --accent-foreground: 180 100% 95%;
+    --accent: 290 85% 65%;
+    --accent-foreground: 180 100% 98%;
 
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 180 100% 95%;
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 180 100% 98%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 15%;
-    --ring: 180 100% 50%;
+    --border: 222 30% 18%;
+    --input: 222 30% 12%;
+    --ring: 180 100% 55%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --node-locked: 220 15% 12%;
-    --node-current: 180 100% 50%;
-    --node-completed: 140 60% 50%;
+    --node-locked: 222 30% 15%;
+    --node-current: 180 100% 55%;
+    --node-completed: 145 80% 55%;
     
-    --glow-soft: 180 100% 50%;
-    --glow-intense: 180 100% 70%;
+    --glow-soft: 180 100% 55%;
+    --glow-intense: 180 100% 75%;
     
-    --mission-1: 180 100% 50%;
-    --mission-2: 280 80% 60%;
-    --mission-3: 40 100% 60%;
+    --mission-1: 180 100% 55%;
+    --mission-2: 265 85% 65%;
+    --mission-3: 35 100% 60%;
+    
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Inter', sans-serif;
   }
 }
 
@@ -100,6 +103,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
   }
 }

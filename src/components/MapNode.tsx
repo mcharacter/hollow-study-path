@@ -20,11 +20,11 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
   const getNodeColor = () => {
     switch (node.status) {
       case "completed":
-        return "hsl(140 60% 50%)";
+        return "hsl(145 80% 55%)";
       case "current":
-        return "hsl(180 100% 50%)";
+        return "hsl(180 100% 55%)";
       case "locked":
-        return "hsl(220 15% 20%)";
+        return "hsl(222 30% 25%)";
     }
   };
 
@@ -59,10 +59,10 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
       <circle
         cx={node.x}
         cy={node.y}
-        r="30"
-        fill={node.status === "locked" ? "hsl(220 15% 12%)" : "hsl(220 15% 10%)"}
+        r="35"
+        fill={node.status === "locked" ? "hsl(222 30% 12%)" : "hsl(222 40% 8%)"}
         stroke={getNodeColor()}
-        strokeWidth={isSelected ? "4" : "2"}
+        strokeWidth={isSelected ? "5" : "3"}
         filter={node.status !== "locked" ? "url(#glow)" : undefined}
         className="transition-all duration-300"
       />
@@ -72,9 +72,9 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
         <circle
           cx={node.x}
           cy={node.y}
-          r="20"
+          r="25"
           fill={getNodeColor()}
-          opacity="0.3"
+          opacity="0.4"
         />
       )}
 
@@ -82,18 +82,18 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
       {node.status === "locked" && (
         <g>
           <rect
-            x={node.x - 8}
-            y={node.y - 4}
-            width="16"
-            height="12"
+            x={node.x - 9}
+            y={node.y - 5}
+            width="18"
+            height="14"
             rx="2"
-            fill="hsl(220 15% 30%)"
+            fill="hsl(222 30% 35%)"
           />
           <path
-            d={`M ${node.x - 6} ${node.y - 4} v -6 a 6 6 0 0 1 12 0 v 6`}
+            d={`M ${node.x - 7} ${node.y - 5} v -7 a 7 7 0 0 1 14 0 v 7`}
             fill="none"
-            stroke="hsl(220 15% 30%)"
-            strokeWidth="2"
+            stroke="hsl(222 30% 35%)"
+            strokeWidth="2.5"
           />
         </g>
       )}
@@ -137,10 +137,10 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
       {/* Node title */}
       <text
         x={node.x}
-        y={node.y + 50}
+        y={node.y + 60}
         textAnchor="middle"
-        className="text-sm font-medium pointer-events-none"
-        fill={node.status === "locked" ? "hsl(220 15% 30%)" : "hsl(180 100% 80%)"}
+        className="text-base font-display font-semibold pointer-events-none"
+        fill={node.status === "locked" ? "hsl(222 30% 40%)" : "hsl(180 100% 85%)"}
       >
         {node.title}
       </text>
@@ -148,13 +148,14 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
       {/* Description on hover/select */}
       {isSelected && node.description && (
         <foreignObject
-          x={node.x + 40}
-          y={node.y - 50}
-          width="200"
-          height="100"
+          x={node.x + 50}
+          y={node.y - 70}
+          width="280"
+          height="auto"
         >
-          <div className="bg-card border border-primary/30 rounded-lg p-3 text-xs text-foreground glow-soft">
-            {node.description}
+          <div className="bg-card/95 backdrop-blur-xl border-2 border-primary/50 rounded-xl p-5 text-sm text-foreground shadow-2xl glow-intense font-body">
+            <h4 className="font-display font-bold text-primary mb-2">{node.title}</h4>
+            <p className="text-muted-foreground leading-relaxed">{node.description}</p>
           </div>
         </foreignObject>
       )}

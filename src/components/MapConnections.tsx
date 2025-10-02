@@ -13,12 +13,12 @@ interface MapConnectionsProps {
 export const MapConnections = ({ nodes }: MapConnectionsProps) => {
   const getConnectionColor = (fromNode: Node, toNode: Node) => {
     if (fromNode.status === "completed" && toNode.status !== "locked") {
-      return "hsl(140 60% 50%)";
+      return "hsl(145 80% 55%)";
     }
     if (fromNode.status === "current" || toNode.status === "current") {
-      return "hsl(180 100% 50%)";
+      return "hsl(180 100% 55%)";
     }
-    return "hsl(220 15% 20%)";
+    return "hsl(222 30% 25%)";
   };
 
   const getConnectionOpacity = (fromNode: Node, toNode: Node) => {
@@ -55,8 +55,8 @@ export const MapConnections = ({ nodes }: MapConnectionsProps) => {
                   d={`M ${node.x} ${node.y} Q ${controlX} ${controlY} ${targetNode.x} ${targetNode.y}`}
                   fill="none"
                   stroke={color}
-                  strokeWidth="6"
-                  opacity="0.1"
+                  strokeWidth="8"
+                  opacity="0.15"
                   filter="url(#glow)"
                 />
               )}
@@ -66,16 +66,16 @@ export const MapConnections = ({ nodes }: MapConnectionsProps) => {
                 d={`M ${node.x} ${node.y} Q ${controlX} ${controlY} ${targetNode.x} ${targetNode.y}`}
                 fill="none"
                 stroke={color}
-                strokeWidth="2"
+                strokeWidth="3"
                 opacity={opacity}
-                strokeDasharray={node.status === "locked" ? "5,5" : "none"}
+                strokeDasharray={node.status === "locked" ? "8,5" : "none"}
               />
 
               {/* Animated flow for active connections */}
               {node.status === "completed" && targetNode.status !== "locked" && (
-                <circle r="4" fill={color}>
+                <circle r="5" fill={color} opacity="0.9">
                   <animateMotion
-                    dur="3s"
+                    dur="2.5s"
                     repeatCount="indefinite"
                     path={`M ${node.x} ${node.y} Q ${controlX} ${controlY} ${targetNode.x} ${targetNode.y}`}
                   />
