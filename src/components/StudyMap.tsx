@@ -5,8 +5,10 @@ import { MapConnections } from "./MapConnections";
 import { ParticleBackground } from "./ParticleBackground";
 import { ZoomControls } from "./ZoomControls";
 import { useMapData } from "@/hooks/useMapData";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Circle, GitBranch, Network } from "lucide-react";
 import { Button } from "./ui/button";
+
+type MapStyle = "default" | "network" | "organic";
 
 interface StudyMapProps {
   subject: string;
@@ -16,6 +18,7 @@ interface StudyMapProps {
 
 export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [mapStyle, setMapStyle] = useState<MapStyle>("default");
   const { chapters, nodes } = useMapData();
 
   return (
@@ -28,24 +31,59 @@ export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
           onClick={onBack}
           variant="outline"
           size="lg"
-          className="bg-card/80 backdrop-blur-xl border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+          className="glass-card hover:border-primary hover:bg-primary/10 transition-all duration-300"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Menu
         </Button>
-        <div className="bg-card/80 backdrop-blur-xl border-2 border-primary/30 rounded-xl px-6 py-3">
-          <h2 className="text-xl font-display font-bold text-primary">{subject}</h2>
-          <p className="text-sm text-muted-foreground font-body">{chapter}</p>
+        <div className="glass-card rounded-xl px-6 py-3 shadow-xl">
+          <h2 className="text-xl font-display font-black text-primary tracking-tight">{subject}</h2>
+          <p className="text-sm text-muted-foreground font-body font-light">{chapter}</p>
+        </div>
+      </div>
+      
+      {/* Map Style Selector */}
+      <div className="absolute top-6 right-6 z-50 glass-card rounded-xl p-3 shadow-xl">
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setMapStyle("default")}
+            variant={mapStyle === "default" ? "default" : "ghost"}
+            size="sm"
+            className="transition-all duration-300"
+          >
+            <Circle className="w-4 h-4 mr-2" />
+            Classic
+          </Button>
+          <Button
+            onClick={() => setMapStyle("network")}
+            variant={mapStyle === "network" ? "default" : "ghost"}
+            size="sm"
+            className="transition-all duration-300"
+          >
+            <Network className="w-4 h-4 mr-2" />
+            Network
+          </Button>
+          <Button
+            onClick={() => setMapStyle("organic")}
+            variant={mapStyle === "organic" ? "default" : "ghost"}
+            size="sm"
+            className="transition-all duration-300"
+          >
+            <GitBranch className="w-4 h-4 mr-2" />
+            Organic
+          </Button>
         </div>
       </div>
       
       <TransformWrapper
-        initialScale={0.6}
+        initialScale={0.7}
         minScale={0.3}
         maxScale={2}
         centerOnInit
+        centerZoomedOut
         wheel={{ smoothStep: 0.01 }}
         doubleClick={{ disabled: true }}
+        limitToBounds={false}
       >
         {({ zoomIn, zoomOut, resetTransform, centerView }) => (
           <>
@@ -57,11 +95,12 @@ export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
             
             <TransformComponent
               wrapperClass="!w-full !h-full"
-              contentClass="!w-full !h-full"
+              contentClass="!w-full !h-full flex items-center justify-center"
             >
               <svg
-                className="absolute inset-0"
+                className="mx-auto"
                 style={{ width: "4000px", height: "3000px" }}
+                viewBox="0 0 4000 3000"
               >
                 <defs>
                   <filter id="glow">
@@ -116,7 +155,7 @@ export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
                 ))}
 
                 {/* Connections between nodes */}
-                <MapConnections nodes={nodes} />
+                <MapConnections nodes={nodes} mapStyle={mapStyle} />
 
                 {/* Nodes */}
                 {nodes.map((node) => (
@@ -125,6 +164,7 @@ export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
                     node={node}
                     isSelected={selectedNode === node.id}
                     onClick={() => setSelectedNode(node.id)}
+                    mapStyle={mapStyle}
                   />
                 ))}
               </svg>

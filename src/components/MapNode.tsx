@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { Lock, CheckCircle2 } from "lucide-react";
 
 interface Node {
   id: string;
@@ -14,100 +14,152 @@ interface MapNodeProps {
   node: Node;
   isSelected: boolean;
   onClick: () => void;
+  mapStyle: "default" | "network" | "organic";
 }
 
-export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
+export const MapNode = ({ node, isSelected, onClick, mapStyle }: MapNodeProps) => {
   const getNodeColor = () => {
     switch (node.status) {
-      case "completed":
-        return "hsl(145 80% 55%)";
-      case "current":
-        return "hsl(180 100% 55%)";
       case "locked":
-        return "hsl(222 30% 25%)";
+        return "hsl(186 12% 25%)";
+      case "current":
+        return "hsl(157 72% 47%)";
+      case "completed":
+        return "hsl(157 72% 47%)";
+      default:
+        return "hsl(186 12% 25%)";
     }
   };
 
-  const getGlowIntensity = () => {
-    if (node.status === "locked") return 0;
-    if (node.status === "current") return 1;
-    return 0.6;
+  const getGlowColor = () => {
+    switch (node.status) {
+      case "current":
+        return "hsl(157 72% 67%)";
+      case "completed":
+        return "hsl(157 72% 67%)";
+      default:
+        return "none";
+    }
   };
+  
+  const getNodeSize = () => {
+    switch (mapStyle) {
+      case "network":
+        return { outer: 28, inner: 18 };
+      case "organic":
+        return { outer: 42, inner: 32 };
+      default:
+        return { outer: 35, inner: 25 };
+    }
+  };
+  
+  const size = getNodeSize();
 
   return (
     <g onClick={onClick} className="cursor-pointer">
-      {/* Glow effect */}
-      {node.status !== "locked" && (
-        <circle
-          cx={node.x}
-          cy={node.y}
-          r="45"
-          fill={getNodeColor()}
-          opacity={getGlowIntensity() * 0.2}
-          filter="url(#glow)"
-        >
-          <animate
-            attributeName="r"
-            values="45;50;45"
-            dur="2s"
-            repeatCount="indefinite"
-          />
-        </circle>
-      )}
-
-      {/* Main node circle */}
-      <circle
-        cx={node.x}
-        cy={node.y}
-        r="35"
-        fill={node.status === "locked" ? "hsl(222 30% 12%)" : "hsl(222 40% 8%)"}
-        stroke={getNodeColor()}
-        strokeWidth={isSelected ? "5" : "3"}
-        filter={node.status !== "locked" ? "url(#glow)" : undefined}
-        className="transition-all duration-300"
-      />
-
-      {/* Inner circle for completed/current */}
-      {node.status !== "locked" && (
-        <circle
-          cx={node.x}
-          cy={node.y}
-          r="25"
-          fill={getNodeColor()}
-          opacity="0.4"
-        />
-      )}
-
-      {/* Lock icon for locked nodes */}
-      {node.status === "locked" && (
-        <g>
-          <rect
-            x={node.x - 9}
-            y={node.y - 5}
-            width="18"
-            height="14"
-            rx="2"
-            fill="hsl(222 30% 35%)"
-          />
-          <path
-            d={`M ${node.x - 7} ${node.y - 5} v -7 a 7 7 0 0 1 14 0 v 7`}
+      {/* Node shape based on style */}
+      {mapStyle === "network" && (
+        <>
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={size.outer}
             fill="none"
-            stroke="hsl(222 30% 35%)"
-            strokeWidth="2.5"
+            stroke={getNodeColor()}
+            strokeWidth="3"
+            filter={node.status !== "locked" ? "url(#glow)" : "none"}
+            className="transition-all duration-300"
+            style={{ opacity: node.status === "locked" ? 0.3 : 1 }}
           />
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={size.inner}
+            fill={getNodeColor()}
+            stroke={node.status !== "locked" ? getGlowColor() : getNodeColor()}
+            strokeWidth="2"
+            className="transition-all duration-300 cursor-pointer hover:brightness-125"
+            style={{
+              opacity: node.status === "locked" ? 0.5 : 1,
+              filter: node.status !== "locked" ? `drop-shadow(0 0 8px ${getGlowColor()})` : "none",
+            }}
+          />
+        </>
+      )}
+      
+      {mapStyle === "organic" && (
+        <>
+          <ellipse
+            cx={node.x}
+            cy={node.y}
+            rx={size.outer * 1.2}
+            ry={size.outer * 0.8}
+            fill="none"
+            stroke={getNodeColor()}
+            strokeWidth="4"
+            filter={node.status !== "locked" ? "url(#glow)" : "none"}
+            className="transition-all duration-300"
+            style={{ opacity: node.status === "locked" ? 0.3 : 1 }}
+            transform={`rotate(${node.id.charCodeAt(0) * 10} ${node.x} ${node.y})`}
+          />
+          <ellipse
+            cx={node.x}
+            cy={node.y}
+            rx={size.inner * 1.2}
+            ry={size.inner * 0.8}
+            fill={getNodeColor()}
+            stroke={node.status !== "locked" ? getGlowColor() : getNodeColor()}
+            strokeWidth="2"
+            className="transition-all duration-300 cursor-pointer hover:brightness-125"
+            style={{
+              opacity: node.status === "locked" ? 0.5 : 1,
+              filter: node.status !== "locked" ? `drop-shadow(0 0 8px ${getGlowColor()})` : "none",
+            }}
+            transform={`rotate(${node.id.charCodeAt(0) * 10} ${node.x} ${node.y})`}
+          />
+        </>
+      )}
+      
+      {mapStyle === "default" && (
+        <>
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={size.outer}
+            fill="none"
+            stroke={getNodeColor()}
+            strokeWidth="5"
+            filter={node.status !== "locked" ? "url(#glow)" : "none"}
+            className="transition-all duration-300"
+            style={{ opacity: node.status === "locked" ? 0.3 : 1 }}
+          />
+          <circle
+            cx={node.x}
+            cy={node.y}
+            r={size.inner}
+            fill={getNodeColor()}
+            stroke={node.status !== "locked" ? getGlowColor() : getNodeColor()}
+            strokeWidth="3"
+            className="transition-all duration-300 cursor-pointer hover:brightness-125"
+            style={{
+              opacity: node.status === "locked" ? 0.5 : 1,
+              filter: node.status !== "locked" ? `drop-shadow(0 0 8px ${getGlowColor()})` : "none",
+            }}
+          />
+        </>
+      )}
+
+      {/* Status icons */}
+      {node.status === "locked" && (
+        <g transform={`translate(${node.x - 8}, ${node.y - 8})`}>
+          <Lock className="w-4 h-4" color="hsl(220 13% 69%)" />
         </g>
       )}
 
-      {/* Checkmark for completed */}
       {node.status === "completed" && (
-        <path
-          d={`M ${node.x - 8} ${node.y} l 6 6 l 10 -12`}
-          fill="none"
-          stroke={getNodeColor()}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <g transform={`translate(${node.x - 10}, ${node.y - 10})`}>
+          <CheckCircle2 className="w-5 h-5" color={getGlowColor()} />
+        </g>
       )}
 
       {/* Pulse for current node */}
@@ -115,19 +167,19 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
         <circle
           cx={node.x}
           cy={node.y}
-          r="10"
+          r="15"
           fill={getNodeColor()}
-          opacity="0.8"
+          opacity="0.6"
         >
           <animate
             attributeName="r"
-            values="10;15;10"
+            values="15;20;15"
             dur="1.5s"
             repeatCount="indefinite"
           />
           <animate
             attributeName="opacity"
-            values="0.8;0.3;0.8"
+            values="0.6;0.2;0.6"
             dur="1.5s"
             repeatCount="indefinite"
           />
@@ -137,25 +189,33 @@ export const MapNode = ({ node, isSelected, onClick }: MapNodeProps) => {
       {/* Node title */}
       <text
         x={node.x}
-        y={node.y + 60}
+        y={node.y + 65}
         textAnchor="middle"
-        className="text-base font-display font-semibold pointer-events-none"
-        fill={node.status === "locked" ? "hsl(222 30% 40%)" : "hsl(180 100% 85%)"}
+        className="text-base font-display font-black pointer-events-none select-none tracking-tight"
+        fill={node.status === "locked" ? "hsl(220 13% 69%)" : "hsl(210 100% 97%)"}
+        style={{
+          textShadow: node.status !== "locked" ? `0 0 8px ${getGlowColor()}` : "none",
+        }}
       >
         {node.title}
       </text>
 
       {/* Description on hover/select */}
-      {isSelected && node.description && (
+      {(isSelected || node.status === "current") && node.description && (
         <foreignObject
-          x={node.x + 50}
-          y={node.y - 70}
+          x={node.x - 140}
+          y={node.y - 200}
           width="280"
           height="auto"
+          className="pointer-events-none"
         >
-          <div className="bg-card/95 backdrop-blur-xl border-2 border-primary/50 rounded-xl p-5 text-sm text-foreground shadow-2xl glow-intense font-body">
-            <h4 className="font-display font-bold text-primary mb-2">{node.title}</h4>
-            <p className="text-muted-foreground leading-relaxed">{node.description}</p>
+          <div className="glass-card rounded-xl p-4 shadow-2xl border-primary/50">
+            <h3 className="text-sm font-display font-black text-primary mb-2 tracking-tight">
+              {node.title}
+            </h3>
+            <p className="text-xs font-body text-foreground/90 leading-relaxed font-light">
+              {node.description}
+            </p>
           </div>
         </foreignObject>
       )}

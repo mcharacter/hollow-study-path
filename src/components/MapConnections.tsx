@@ -8,17 +8,18 @@ interface Node {
 
 interface MapConnectionsProps {
   nodes: Node[];
+  mapStyle: "default" | "network" | "organic";
 }
 
-export const MapConnections = ({ nodes }: MapConnectionsProps) => {
+export const MapConnections = ({ nodes, mapStyle }: MapConnectionsProps) => {
   const getConnectionColor = (fromNode: Node, toNode: Node) => {
-    if (fromNode.status === "completed" && toNode.status !== "locked") {
-      return "hsl(145 80% 55%)";
+    if (fromNode.status === "completed" && toNode.status === "completed") {
+      return "hsl(157 72% 47%)";
     }
     if (fromNode.status === "current" || toNode.status === "current") {
-      return "hsl(180 100% 55%)";
+      return "hsl(157 72% 47%)";
     }
-    return "hsl(222 30% 25%)";
+    return "hsl(186 12% 30%)";
   };
 
   const getConnectionOpacity = (fromNode: Node, toNode: Node) => {
@@ -26,6 +27,23 @@ export const MapConnections = ({ nodes }: MapConnectionsProps) => {
       return "0.2";
     }
     return "0.5";
+  };
+  
+  const getStrokeWidth = () => {
+    switch (mapStyle) {
+      case "network":
+        return 1.5;
+      case "organic":
+        return 4;
+      default:
+        return 3;
+    }
+  };
+  
+  const getDashArray = () => {
+    if (mapStyle === "network") return "5,5";
+    if (mapStyle === "organic") return "none";
+    return "none";
   };
 
   return (
@@ -55,7 +73,7 @@ export const MapConnections = ({ nodes }: MapConnectionsProps) => {
                   d={`M ${node.x} ${node.y} Q ${controlX} ${controlY} ${targetNode.x} ${targetNode.y}`}
                   fill="none"
                   stroke={color}
-                  strokeWidth="8"
+                  strokeWidth={getStrokeWidth() * 2.5}
                   opacity="0.15"
                   filter="url(#glow)"
                 />
@@ -66,9 +84,10 @@ export const MapConnections = ({ nodes }: MapConnectionsProps) => {
                 d={`M ${node.x} ${node.y} Q ${controlX} ${controlY} ${targetNode.x} ${targetNode.y}`}
                 fill="none"
                 stroke={color}
-                strokeWidth="3"
+                strokeWidth={getStrokeWidth()}
                 opacity={opacity}
-                strokeDasharray={node.status === "locked" ? "8,5" : "none"}
+                strokeDasharray={getDashArray()}
+                strokeLinecap="round"
               />
 
               {/* Animated flow for active connections */}

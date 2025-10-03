@@ -123,16 +123,13 @@ export const SubjectMenu = ({ onSelectChapter }: SubjectMenuProps) => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex items-center justify-center gap-3">
               <Sparkles className="w-8 h-8 text-primary animate-pulse" />
-              <h1 className="text-6xl font-display font-bold text-glow">
-                CBSE Class 12
+              <h1 className="text-7xl font-display font-black text-glow tracking-tight">
+                CBSE CLASS 12
               </h1>
               <Sparkles className="w-8 h-8 text-primary animate-pulse" />
             </div>
-            <p className="text-xl text-muted-foreground font-body">
-              Choose your subject and embark on your learning journey
-            </p>
           </motion.div>
 
           {/* Subjects Grid */}
@@ -151,14 +148,14 @@ export const SubjectMenu = ({ onSelectChapter }: SubjectMenuProps) => {
                   onClick={() => handleSubjectClick(subject.id)}
                 >
                   {/* Subject Card */}
-                  <div className="relative bg-card/50 backdrop-blur-xl border-2 border-primary/20 rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 glow-soft">
+                  <div className="relative glass-card rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 shadow-xl hover:shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="text-5xl">{subject.icon}</div>
+                      <div className="text-5xl drop-shadow-lg">{subject.icon}</div>
                       <div>
-                        <h2 className="text-3xl font-display font-bold text-primary">
+                        <h2 className="text-3xl font-display font-black text-primary tracking-tight">
                           {subject.name}
                         </h2>
-                        <p className="text-sm text-muted-foreground font-body">
+                        <p className="text-sm text-muted-foreground font-body font-light">
                           {subject.chapters.length} Chapters
                         </p>
                       </div>
@@ -190,7 +187,7 @@ export const SubjectMenu = ({ onSelectChapter }: SubjectMenuProps) => {
                                   e.stopPropagation();
                                   onSelectChapter(subject.name, chapter);
                                 }}
-                                className="group/chapter flex items-center gap-3 px-4 py-3 bg-background/50 hover:bg-primary/10 rounded-lg transition-all duration-200 text-left border border-border hover:border-primary/30"
+                                className="group/chapter flex items-center gap-3 px-4 py-3 glass-card hover:bg-primary/10 rounded-lg transition-all duration-200 text-left hover:border-primary/50"
                               >
                                 <BookOpen className="w-4 h-4 text-primary/50 group-hover/chapter:text-primary transition-colors" />
                                 <span className="text-sm font-body text-foreground/90 group-hover/chapter:text-primary transition-colors">
