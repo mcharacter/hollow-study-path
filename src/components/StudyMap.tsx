@@ -19,7 +19,7 @@ interface StudyMapProps {
 export const StudyMap = ({ subject, chapter, onBack }: StudyMapProps) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [mapStyle, setMapStyle] = useState<MapStyle>("default");
-  const { chapters, nodes } = useMapData();
+  const { chapters, nodes } = useMapData({ subject, chapter });
 
   return (
     <div className="relative w-full h-full">
